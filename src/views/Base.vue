@@ -10,13 +10,14 @@
                 </div>
                 <a-menu
                         :defaultOpenKeys="['sub1']"
-                        :defaultSelectedKeys="['1']"
+                        :defaultSelectedKeys="['index']"
                         :inlineCollapsed="collapsed"
                         class="slide-nav"
                         mode="inline"
                         theme="dark"
+                        @click="changeRoute"
                 >
-                    <a-menu-item key="1">
+                    <a-menu-item key="index">
                         <a-icon type="pie-chart"/>
                         <span>Option 1</span>
                     </a-menu-item>
@@ -59,19 +60,19 @@
                                 <img alt="" class="avatar" src="@/assets/img/avatar.png">
                                 <div>{{getUserInfo.username}}</div>
                             </a>
-                            <a-menu slot="overlay">
+                            <a-menu @click="handleSystemClick" slot="overlay">
                                 <a-menu-item key="0" style="width: 150px">
                                     <a href="http://www.alipay.com/" target="_blank">
-                                        <a-icon type="cloud"/>
+                                        <a-icon style="margin-right: 8px" type="cloud"/>
                                         个人中心</a>
                                 </a-menu-item>
                                 <a-menu-item key="1">
                                     <a href="http://www.taobao.com/" target="_blank">
-                                        <a-icon type="setting"/>
+                                        <a-icon style="margin-right: 8px" type="setting"/>
                                         个人设置</a>
                                 </a-menu-item>
                                 <a-menu-divider/>
-                                <a-menu-item key="3">退出登录</a-menu-item>
+                                <a-menu-item key="logout">退出登录</a-menu-item>
                             </a-menu>
                         </a-dropdown>
                     </div>
@@ -83,9 +84,9 @@
                 <!--底部-->
                 <a-layout-footer>
                     <div class="footer">
-                        Copyright
-                        <a-icon type="copyright"/>
-                        {{this.$moment().format('YYYY')}} bootvue
+                        Copyright &nbsp;
+                        <a-icon type="copyright"/> &nbsp;
+                        2019 - {{this.$moment().format('YYYY')}} &nbsp; bootvue
                     </div>
                 </a-layout-footer>
             </a-layout>
@@ -114,6 +115,29 @@
             /*nav触发 收起*/
             isCollapsed(broken) {
                 this.collapsed = broken
+            },
+            /*右上角点击事件*/
+            handleSystemClick({key}) {
+                switch (key) {
+                    case 'logout': //退出登录
+                        this.$store.dispatch('logout');
+                        break;
+                    case '1':
+                        break;
+                    default:
+                        break;
+                }
+            },
+            /*路由切换*/
+            changeRoute(e) {
+                switch (e.key) {
+                    case 'index': //首页
+                        this.$router.replace({path: '/index/index'});
+                        break;
+                    case '2':
+                        this.$router.replace({path: '/index/test'});
+                        break;
+                }
             }
         }
     }

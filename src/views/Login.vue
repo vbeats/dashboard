@@ -102,7 +102,7 @@
             <div class="text">
                 Copyright
                 <a-icon type="copyright"/>
-                {{this.$moment().format('YYYY')}} bootvue
+                2019 - {{this.$moment().format('YYYY')}} bootvue
             </div>
         </div>
     </div>

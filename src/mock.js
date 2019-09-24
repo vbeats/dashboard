@@ -18,4 +18,4 @@ const login = () => {
 };
 
 Mock.mock('/login', 'post', login);
-Mock.mock("/index", '*', success());
+Mock.mock("/logout", 'post', success());

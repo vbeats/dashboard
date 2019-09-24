@@ -13,7 +13,7 @@ Vue.config.productionTip = false;
 
 /*全局路由拦截*/
 router.beforeEach((to, from, next) => {
-
+    console.log(to, from);
     const token = localStorage.getItem('token') || '';
 
     if (token === '') {

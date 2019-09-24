@@ -10,6 +10,7 @@ const state = {
 };
 
 const mutations = {
+    //登录
     login(state, userInfo) {
         state.user = userInfo;
         axios.post(AppConfig.loginUrl, {user: userInfo}).then(res => {
@@ -17,6 +18,15 @@ const mutations = {
             state.token = token;
             localStorage.setItem("token", token);
             window.location.href = '/';
+        })
+    },
+    //退出登录
+    logout(state) {
+        axios.post(AppConfig.logoutUrl).then(res => {
+            console.log(res);
+            state.token = '';
+            localStorage.removeItem('token');
+            window.location.reload()
         })
     }
 };
