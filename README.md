@@ -1,29 +1,9 @@
-# dashboard
+### demo
 
-## Project setup
-```
-yarn install
-```
+> http://demo.bootvue.com
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
+### 图片
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+![demo1](https://s2.ax1x.com/2019/09/24/ukh8zj.png)
 
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![demo2](https://s2.ax1x.com/2019/09/24/ukhBYF.png)
