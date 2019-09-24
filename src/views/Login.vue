@@ -252,7 +252,7 @@
             justify-content center
 
             .text
-                color: rgba(0, 0, 0, .45);
+                color: rgba(0, 0, 0, .45)
                 font-size: 14px;
                 position fixed
                 bottom 8px
