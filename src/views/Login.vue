@@ -17,78 +17,129 @@
             </div>
             <div class="content">
                 <!--登录入口-->
-                <a-tabs @change="changeLoginType" class="cus-tabs" default-active-key="1" size="large">
-                    <a-tab-pane key="1" tab="账号密码登录">
-                        <!--普通登录-->
-                        <a-form :form="form" @submit="handleLogin" style="margin-top: 12px">
-                            <a-form-item>
-                                <a-input placeholder="用户名"
-                                         size="large"
-                                         v-decorator="['username',{rules: [{ required: true, message: '用户名不能为空' }]}]">
-                                    <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="user"/>
-                                </a-input>
-                            </a-form-item>
-                            <a-form-item style="margin-top: 12px">
-                                <a-input placeholder="密码"
-                                         size="large"
-                                         type="password"
-                                         v-decorator="['password',{rules: [{ required: true, message: '密码不能为空' }]}]">
-                                    <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="lock"/>
-                                </a-input>
-                            </a-form-item>
+                <div v-if="type!==2">
+                    <a-tabs @change="changeLoginType" class="cus-tabs" default-active-key="1" size="large">
+                        <a-tab-pane key="1" tab="账号密码登录">
+                            <!--普通登录-->
+                            <a-form :form="form" @submit="handleLogin" style="margin-top: 12px">
+                                <a-form-item>
+                                    <a-input placeholder="用户名"
+                                             size="large"
+                                             v-decorator="['username',{rules: [{ required: true, message: '用户名不能为空' }]}]">
+                                        <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="user"/>
+                                    </a-input>
+                                </a-form-item>
+                                <a-form-item style="margin-top: 12px">
+                                    <a-input placeholder="密码"
+                                             size="large"
+                                             type="password"
+                                             v-decorator="['password',{rules: [{ required: true, message: '密码不能为空' }]}]">
+                                        <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="lock"/>
+                                    </a-input>
+                                </a-form-item>
 
-                            <a-form-item>
-                                <a-button block html-type="submit" size="large" style="margin-top: 16px" type="primary">
-                                    登录
-                                </a-button>
-                            </a-form-item>
-                        </a-form>
-                    </a-tab-pane>
+                                <a-form-item>
+                                    <a-button block html-type="submit" size="large" style="margin-top: 16px"
+                                              type="primary">
+                                        登录
+                                    </a-button>
+                                </a-form-item>
+                            </a-form>
+                        </a-tab-pane>
 
-                    <a-tab-pane key="2" tab="手机短信登录">
-                        <a-form :form="form" @submit="handlePhoneLogin" style="margin-top: 12px">
-                            <a-form-item>
-                                <a-input placeholder="手机号"
-                                         size="large"
-                                         v-decorator="['phone',{rules: [{ required: true, message: '手机号不能为空' }]}]">
-                                    <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="phone"/>
-                                </a-input>
-                            </a-form-item>
-                            <a-form-item style="margin-top: 12px">
-                                <a-row>
-                                    <a-col :lg="{span:14}" :md="{span:14}" :sm="{span:14}" :xl="{span:14}"
-                                           :xs="{span:14}">
-                                        <a-input placeholder="验证码"
-                                                 size="large"
-                                                 type="text"
-                                                 v-decorator="['code',{rules: [{ required: true, message: '验证码不能为空' }]}]">
-                                            <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="mail"/>
-                                        </a-input>
-                                    </a-col>
-                                    <a-col :lg="{span:8,offset:2}" :md="{span:8,offset:2}" :sm="{span:8,offset:2}"
-                                           :xl="{span:8,offset:2}" :xs="{span:8,offset:2}">
-                                        <a-button block size="large">
-                                            获取验证码
-                                        </a-button>
-                                    </a-col>
-                                </a-row>
-                            </a-form-item>
+                        <a-tab-pane key="2" tab="手机短信登录">
+                            <a-form :form="form" @submit="handlePhoneLogin" style="margin-top: 12px">
+                                <a-form-item>
+                                    <a-input placeholder="手机号"
+                                             size="large"
+                                             v-decorator="['phone',{rules: [{ required: true, message: '手机号不能为空' }]}]">
+                                        <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="phone"/>
+                                    </a-input>
+                                </a-form-item>
+                                <a-form-item style="margin-top: 12px">
+                                    <a-row>
+                                        <a-col :lg="{span:14}" :md="{span:14}" :sm="{span:14}" :xl="{span:14}"
+                                               :xs="{span:14}">
+                                            <a-input placeholder="验证码"
+                                                     size="large"
+                                                     type="text"
+                                                     v-decorator="['code',{rules: [{ required: true, message: '验证码不能为空' }]}]">
+                                                <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="mail"/>
+                                            </a-input>
+                                        </a-col>
+                                        <a-col :lg="{span:8,offset:2}" :md="{span:8,offset:2}" :sm="{span:8,offset:2}"
+                                               :xl="{span:8,offset:2}" :xs="{span:8,offset:2}">
+                                            <a-button block size="large">
+                                                获取验证码
+                                            </a-button>
+                                        </a-col>
+                                    </a-row>
+                                </a-form-item>
 
-                            <a-form-item>
-                                <a-button block html-type="submit" size="large" style="margin-top: 16px" type="primary">
-                                    登录
-                                </a-button>
-                            </a-form-item>
-                        </a-form>
-                    </a-tab-pane>
-                </a-tabs>
+                                <a-form-item>
+                                    <a-button block html-type="submit" size="large" style="margin-top: 16px"
+                                              type="primary">
+                                        登录
+                                    </a-button>
+                                </a-form-item>
+                            </a-form>
+                        </a-tab-pane>
+                    </a-tabs>
+                </div>
                 <!--注册入口-->
-                <div class="other">
+                <div v-if="type===2">
+                    <div class="reg-text">用户注册</div>
+                    <a-form :form="form" @submit="handleRegister" style="margin-top: 20px">
+                        <a-form-item>
+                            <a-input placeholder="用户名"
+                                     size="large"
+                                     v-decorator="['reg_username',{rules: [{ required: true, message: '用户名不能为空' }]}]">
+                                <a-icon slot="suffix" style="color:rgba(0,0,0,.25)" type="user"/>
+                            </a-input>
+                        </a-form-item>
+                        <a-form-item style="margin-top: 12px">
+                            <a-input placeholder="密码, 至少6位, 区分大小写"
+                                     size="large"
+                                     type="password"
+                                     v-decorator="['reg_password',{rules: [{ required: true, message: '密码不能为空' }]}]">
+                                <a-icon slot="suffix" style="color:rgba(0,0,0,.25)" type="lock"/>
+                            </a-input>
+                        </a-form-item>
+                        <a-form-item :hasFeedback="hasFeedback"
+                                     :help="help"
+                                     :validateStatus="validateStatus"
+                                     style="margin-top: 12px"
+                        >
+                            <a-input placeholder="确认密码"
+                                     size="large"
+                                     type="password"
+                                     v-decorator="['reg_repassword',{rules: [{ required: true, message: '密码不能为空' }]}]">
+                                >
+                                <a-icon slot="suffix" style="color:rgba(0,0,0,.25)" type="lock" v-if="!hasFeedback"/>
+                            </a-input>
+                        </a-form-item>
+
+                        <div class="reg-bottom">
+                            <div class="reg-button">
+                                <a-form-item>
+                                    <a-button block html-type="submit" size="large" style="margin-top: 16px"
+                                              type="primary">
+                                        注 册
+                                    </a-button>
+                                </a-form-item>
+                            </div>
+                            <div @click="reback" class="reback-text">
+                                使用已有账户登录
+                            </div>
+                        </div>
+                    </a-form>
+                </div>
+                <div class="other" v-if="type!==2">
                     <div class="social">
                         <div class="text">其它登陆方式</div>
                         <!--社交登录 图标-->
                     </div>
-                    <div class="register">
+                    <div @click="showRegister" class="register">
                         注册账户
                     </div>
                 </div>
@@ -115,7 +166,10 @@
             return {
                 formLayout: 'horizontal',
                 form: this.$form.createForm(this),
-                type: 0,//0  普通登录, 1短信登录
+                type: 0, // 0普通登录, 1短信登录, 2注册
+                validateStatus: '', // ‘success’, ‘warning’, ‘error’, ‘validating’
+                help: '',// 提示信息
+                hasFeedback: false, //是否显示校验图标
             };
         },
         methods: {
@@ -144,11 +198,34 @@
             // 更改登录方式
             changeLoginType(key) {
                 if (key === 1) {
-                    this.type = 1;
+                    this.type = 0;
                 } else {
-                    this.type = 2;
+                    this.type = 1;
                 }
             },
+            // 展示注册
+            showRegister() {
+                this.type = 2;
+            },
+            // 提交注册
+            handleRegister(e) {
+                e.preventDefault();
+                this.form.validateFields((err, values) => {
+                    if (!err) {
+                        if (values.reg_password === values.reg_repassword) {
+                            console.log(values)
+                        } else {
+                            this.hasFeedback = true;
+                            this.validateStatus = 'error';
+                            this.help = '两次密码输入不一致'
+                        }
+                    }
+                })
+            },
+            // 返回登陆页
+            reback() {
+                this.type = 1
+            }
         },
     };
 </script>
@@ -212,7 +289,10 @@
                 margin 0 auto
 
                 .cus-tabs
-                    text-align center
+                    /*text-align center*/
+                .reg-text
+                    font-size: 1.4rem
+                    text-align: center
 
                 .other
                     display flex
@@ -256,5 +336,23 @@
                 font-size: 14px;
                 position fixed
                 bottom 8px
+
+    /* 注册*/
+    .reg-bottom
+        display flex
+        flex-direction row
+        justify-content space-between
+        align-items center
+
+        .reg-button
+            width 200px
+
+        .reback-text
+            line-height 100%
+            color: #096dd9
+
+            &:hover
+                cursor pointer
+                color #40A9FF
 
 </style>
