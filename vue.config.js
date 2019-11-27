@@ -4,10 +4,5 @@ module.exports = {
         port: 80,
         disableHostCheck: true,
         open: true
-    },
-    chainWebpack: config => {
-        config
-            .plugin('webpack-bundle-analyzer')
-            .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
     }
 };
