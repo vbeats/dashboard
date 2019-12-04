@@ -48,7 +48,7 @@
                         </a-tab-pane>
 
                         <a-tab-pane key="2" tab="手机短信登录">
-                            <a-form :form="form" @submit="handlePhoneLogin" style="margin-top: 12px">
+                            <a-form :form="phoneForm" @submit="handlePhoneLogin" style="margin-top: 12px">
                                 <a-form-item>
                                     <a-input placeholder="手机号"
                                              size="large"
@@ -89,7 +89,7 @@
                 <!--注册入口-->
                 <div v-if="type===2">
                     <div class="reg-text">用户注册</div>
-                    <a-form :form="form" @submit="handleRegister" style="margin-top: 20px">
+                    <a-form :form="regForm" @submit="handleRegister" style="margin-top: 20px">
                         <a-form-item>
                             <a-input placeholder="用户名"
                                      size="large"
@@ -166,6 +166,8 @@
             return {
                 formLayout: 'horizontal',
                 form: this.$form.createForm(this),
+                phoneForm: this.$form.createForm(this),
+                regForm: this.$form.createForm(this),
                 type: 0, // 0普通登录, 1短信登录, 2注册
                 validateStatus: '', // ‘success’, ‘warning’, ‘error’, ‘validating’
                 help: '',// 提示信息
@@ -187,7 +189,7 @@
             // 手机登录
             handlePhoneLogin(e) {
                 e.preventDefault();
-                this.form.validateFields((err, values) => {
+                this.phoneForm.validateFields((err, values) => {
                     if (!err) { // 正常输入
                         let user = values;
                         user.type = this.type;
@@ -197,7 +199,7 @@
             },
             // 更改登录方式
             changeLoginType(key) {
-                if (key === 1) {
+                if (key === '1') {
                     this.type = 0;
                 } else {
                     this.type = 1;
@@ -210,7 +212,7 @@
             // 提交注册
             handleRegister(e) {
                 e.preventDefault();
-                this.form.validateFields((err, values) => {
+                this.regForm.validateFields((err, values) => {
                     if (!err) {
                         if (values.reg_password === values.reg_repassword) {
                             console.log(values)
@@ -231,5 +233,5 @@
 </script>
 
 <style lang="stylus" scoped>
-    @import "./login.styl";
+    @import "login.styl";
 </style>

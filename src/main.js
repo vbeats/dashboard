@@ -25,7 +25,7 @@ router.beforeEach((to, from, next) => {
     } else {
         // 存在token
         if (to.path === '/login') {
-            next({path: '/index/index'}); // 去首页
+            next({path: '/index'}); // 去首页
         } else {
             next();
         }

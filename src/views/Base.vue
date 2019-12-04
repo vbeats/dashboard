@@ -3,7 +3,7 @@
         <a-layout>
             <!--侧边导航栏-->
             <a-layout-sider :collapsed="collapsed" @breakpoint="isCollapsed" breakpoint="md"
-                            collapsedWidth="80">
+                            collapsedWidth="80" width="256">
                 <div class="logo">
                     <img alt="" src="@/assets/img/logo.svg">
                     <h1 class="text" v-show="!collapsed">哇咔咔 ~ ~</h1>
@@ -84,8 +84,10 @@
                 <!--底部-->
                 <a-layout-footer>
                     <div class="footer">
-                        Copyright &nbsp;
-                        <a-icon type="copyright"/> &nbsp;
+                        Copyright
+                        <div class="copyright-icon">
+                            <a-icon type="copyright"/>
+                        </div>
                         2019 - {{this.$moment().format('YYYY')}} &nbsp; bootvue
                     </div>
                 </a-layout-footer>
@@ -132,10 +134,10 @@
             changeRoute(e) {
                 switch (e.key) {
                     case 'index': //首页
-                        this.$router.replace({path: '/index/index'});
+                        this.$router.replace({path: '/index'});
                         break;
                     case '2':
-                        this.$router.replace({path: '/index/test'});
+                        this.$router.replace({path: '/test'});
                         break;
                 }
             }

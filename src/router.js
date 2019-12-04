@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Login from './views/Login';
+import Login from './views/login/Login';
 import Index from "./views/index/Index";
 import Base from "./views/Base";
 
@@ -25,20 +25,26 @@ export default new Router({
             component: Login
         },
         {
-            path: '/index',
+            path: '/',
             name: 'base',
             component: Base,
+            redirect: '/index',
             children: [
                 {
                     path: 'index',
                     name: 'index',
                     component: Index
+                },
+                {
+                    path: 'test',
+                    name: 'test',
+                    component: () => import('./views/test/Test')
                 }
             ]
         },
         {
             path: '*',
-            redirect: '/index/index'
+            redirect: '/index'
         }
     ]
 })
