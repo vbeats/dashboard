@@ -1,5 +1,4 @@
 import getters from './getters';
-import AppConfig from '@/config/AppConfig';
 import axios from '@/config/axios';
 
 const state = {
@@ -13,7 +12,7 @@ const mutations = {
     //登录
     login(state, userInfo) {
         state.user = userInfo;
-        axios.post(AppConfig.loginUrl, {user: userInfo}).then(res => {
+        axios.post('/login', {user: userInfo}).then(res => {
             let token = res.data.data;  //存储token
             state.token = token;
             localStorage.setItem("token", token);
@@ -22,7 +21,7 @@ const mutations = {
     },
     //退出登录
     logout(state) {
-        axios.post(AppConfig.logoutUrl).then(res => {
+        axios.post('/logout').then(res => {
             console.log(res);
             state.token = '';
             localStorage.removeItem('token');

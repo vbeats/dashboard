@@ -1,9 +1,7 @@
 import axios from 'axios';
-import AppConfig from './AppConfig';
-import AppCode from './AppCode';
 
 // 全局axios配置
-axios.defaults.baseURL = AppConfig.baseUrl;
+axios.defaults.baseURL = '';
 axios.defaults.headers['Content-Type'] = 'application/json';
 axios.defaults.transformRequest = [(params) => {
     // 请求拦截
@@ -17,9 +15,9 @@ axios.defaults.transformResponse = [(res) => {
     let data = 0;
     try {
         data = JSON.parse(res);
-        if (data.code === AppCode.TOKEN_ERROR) {// token无效
+        if (data.code === 601) {// token无效
             localStorage.removeItem('token');
-            window.location.href = AppConfig.loginUrl;
+            window.location.href = '/login';
         }
     } catch (e) {
         data = res;
