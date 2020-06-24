@@ -19,11 +19,11 @@
                 >
                     <a-menu-item key="index">
                         <a-icon type="pie-chart"/>
-                        <span>Option 1</span>
+                        <span>首页</span>
                     </a-menu-item>
                     <a-menu-item key="2">
                         <a-icon type="desktop"/>
-                        <span>Option 2</span>
+                        <span>Test页</span>
                     </a-menu-item>
                     <a-menu-item key="3">
                         <a-icon type="inbox"/>

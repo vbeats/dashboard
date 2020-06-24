@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store';
-import axios from './config/axios';
-import moment from 'moment';
-import _ from 'lodash';
-import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
-import './mock';
+import store from './store'
+import axios from './config/axios'
+import moment from 'moment'
+import _ from 'lodash'
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
+import './mock'
 
 Vue.config.productionTip = false;
 
@@ -32,6 +32,7 @@ router.beforeEach((to, from, next) => {
     }
 });
 
+/*全局挂载*/
 Vue.prototype.$axios = axios;
 Vue.prototype.$_ = _;
 Vue.prototype.$moment = moment;

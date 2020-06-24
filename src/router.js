@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Login from './views/login/Login';
 import Index from "./views/index/Index";
 import Base from "./views/Base";
+
+const Login = () => import( './views/login/Login')
 
 /*处理相同路由 再次进入报错*/
 const originalPush = Router.prototype.push;
