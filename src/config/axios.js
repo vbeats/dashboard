@@ -1,28 +1,52 @@
-import axios from 'axios';
+import request from 'axios';
+import store from '@/store';
+import message from 'ant-design-vue/es/message'
 
-// 全局axios配置
-axios.defaults.baseURL = '';
-axios.defaults.headers['Content-Type'] = 'application/json';
-axios.defaults.transformRequest = [(params) => {
-    // 请求拦截
-    console.log("请求参数: ", params);
-    return params;
-}];
+const axios = request.create({
+    baseURL: process.env.VUE_APP_API,
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    timeout: 6000
+})
 
-axios.defaults.transformResponse = [(res) => {
-    console.log("响应: ", res);
-    // 响应拦截
-    let data = 0;
+// 异常处理
+const errorHandler = (error) => {
+    message.error('请求异常~')
+    return Promise.reject(error)
+}
+
+// 请求拦截器
+axios.interceptors.request.use((config) => {
+    const user = store.state.user.user
+    if (user && config.url !== '/auth/refresh_token') {
+        if (user.expire - new Date().getTime() <= 7000) {
+            // 刷新 access_token
+            store.dispatch('refreshToken')
+        }
+        config.headers.common['token'] = store.state.user.user.access_token;
+    }
+    return config;
+}, errorHandler);
+
+// 响应拦截器
+axios.interceptors.response.use((response) => {
+    let res = {};
     try {
-        data = JSON.parse(res);
-        if (data.code === 601) {// token无效
-            localStorage.removeItem('token');
-            window.location.href = '/login';
+        switch (response.data.code) {
+            case 602:  // access_token失效
+                break
+            case 603:  // refresh_token失效
+                store.dispatch('reLogin')
+                break
+            default:
+                res = response.data
         }
     } catch (e) {
-        data = res;
+        res = response;
     }
-    return data;
-}];
+
+    return res;
+}, errorHandler);
 
 export default axios;

@@ -1,12 +1,9 @@
 const actions = {
-    //登录
-    login({commit}, userInfo) {
-        commit('login', userInfo);
-    },
-    //退出登录
-    logout({commit}) {
-        commit('logout');
-    }
+    saveUserInfo: ({commit}, user) => commit('saveUserInfo', user),
+    getUserInfo: ({commit}) => commit('getUserInfo'),
+    logout: ({commit}) => commit('logout'),
+    refreshToken: ({commit}) => commit('refreshToken'),
+    reLogin: ({commit}) => commit('reLogin')
 };
 
 export default actions;

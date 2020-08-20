@@ -38,6 +38,26 @@
                                     </a-input>
                                 </a-form-item>
 
+                                <a-form-item style="margin-top: 12px">
+                                    <a-row>
+                                        <a-col :lg="{span:14}" :md="{span:14}" :sm="{span:14}" :xl="{span:14}"
+                                               :xs="{span:14}">
+                                            <a-input placeholder="验证码"
+                                                     size="large"
+                                                     v-decorator="['captcha',{rules: [{ required: true, message: '验证码不能为空' }]}]">
+                                                <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="picture"/>
+                                            </a-input>
+                                        </a-col>
+                                        <a-col :lg="{span:8,offset:2}" :md="{span:8,offset:2}" :sm="{span:8,offset:2}"
+                                               :xl="{span:8,offset:2}" :xs="{span:8,offset:2}">
+                                            <img
+                                                :src="captcha"
+                                                @click="getCaptchaImg"
+                                                alt="" style="width: 100%">
+                                        </a-col>
+                                    </a-row>
+                                </a-form-item>
+
                                 <a-form-item>
                                     <a-button block html-type="submit" size="large" style="margin-top: 16px"
                                               type="primary">
@@ -72,6 +92,26 @@
                                             <a-button block size="large">
                                                 获取验证码
                                             </a-button>
+                                        </a-col>
+                                    </a-row>
+                                </a-form-item>
+
+                                <a-form-item style="margin-top: 12px">
+                                    <a-row>
+                                        <a-col :lg="{span:14}" :md="{span:14}" :sm="{span:14}" :xl="{span:14}"
+                                               :xs="{span:14}">
+                                            <a-input placeholder="验证码"
+                                                     size="large"
+                                                     v-decorator="['captcha',{rules: [{ required: true, message: '验证码不能为空' }]}]">
+                                                <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="picture"/>
+                                            </a-input>
+                                        </a-col>
+                                        <a-col :lg="{span:8,offset:2}" :md="{span:8,offset:2}" :sm="{span:8,offset:2}"
+                                               :xl="{span:8,offset:2}" :xs="{span:8,offset:2}">
+                                            <img
+                                                :src="captcha"
+                                                @click="getCaptchaImg"
+                                                alt="" style="width: 100%">
                                         </a-col>
                                     </a-row>
                                 </a-form-item>
@@ -153,85 +193,109 @@
             <div class="text">
                 Copyright
                 <a-icon type="copyright"/>
-                2019 - {{this.$moment().format('YYYY')}} bootvue
+                2019 - {{ this.$moment().format('YYYY') }} bootvue
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    export default {
-        name: 'Login',
-        data() {
-            return {
-                formLayout: 'horizontal',
-                form: this.$form.createForm(this),
-                phoneForm: this.$form.createForm(this),
-                regForm: this.$form.createForm(this),
-                type: 0, // 0普通登录, 1短信登录, 2注册
-                validateStatus: '', // ‘success’, ‘warning’, ‘error’, ‘validating’
-                help: '',// 提示信息
-                hasFeedback: false, //是否显示校验图标
-            };
-        },
-        methods: {
-            // 普通登录
-            handleLogin(e) {
-                e.preventDefault();
-                this.form.validateFields((err, values) => {
-                    if (!err) { // 正常输入
-                        let user = values;
-                        user.type = this.type;
-                        this.$store.dispatch('login', user);
+import {getCaptcha, login} from '@/api/user'
+
+export default {
+    name: 'Login',
+    data() {
+        return {
+            formLayout: 'horizontal',
+            form: this.$form.createForm(this),
+            phoneForm: this.$form.createForm(this),
+            regForm: this.$form.createForm(this),
+            captcha: '',
+            type: 0, // 0普通登录, 1短信登录, 2注册
+            validateStatus: '', // ‘success’, ‘warning’, ‘error’, ‘validating’
+            help: '',// 提示信息
+            hasFeedback: false, //是否显示校验图标
+        };
+    },
+    methods: {
+        // 普通登录
+        handleLogin(e) {
+            e.preventDefault();
+            this.form.validateFields((err, values) => {
+                if (!err) {
+                    switch (this.type) {
+                        case 0:
+                            login(values).then(res => {
+                                switch (res.code) {
+                                    case 200:
+                                        this.$store.dispatch('saveUserInfo', res.data)
+                                        break
+                                    default:
+                                        this.$message.error(res.msg)
+                                        this.getCaptchaImg()
+                                        break
+                                }
+                            })
+                            break
+                        case 1:
+                            break
                     }
-                });
-            },
-            // 手机登录
-            handlePhoneLogin(e) {
-                e.preventDefault();
-                this.phoneForm.validateFields((err, values) => {
-                    if (!err) { // 正常输入
-                        let user = values;
-                        user.type = this.type;
-                        this.$store.dispatch('login', user);
-                    }
-                });
-            },
-            // 更改登录方式
-            changeLoginType(key) {
-                if (key === '1') {
-                    this.type = 0;
-                } else {
-                    this.type = 1;
                 }
-            },
-            // 展示注册
-            showRegister() {
-                this.type = 2;
-            },
-            // 提交注册
-            handleRegister(e) {
-                e.preventDefault();
-                this.regForm.validateFields((err, values) => {
-                    if (!err) {
-                        if (values.reg_password === values.reg_repassword) {
-                            console.log(values)
-                        } else {
-                            this.hasFeedback = true;
-                            this.validateStatus = 'error';
-                            this.help = '两次密码输入不一致'
-                        }
-                    }
-                })
-            },
-            // 返回登陆页
-            reback() {
-                this.type = 1
+            });
+        },
+        // 手机登录
+        handlePhoneLogin(e) {
+            e.preventDefault();
+            this.phoneForm.validateFields((err, values) => {
+                if (!err) { // 正常输入
+                    console.log(values)
+                }
+            });
+        },
+        // 更改登录方式
+        changeLoginType(key) {
+            if (key === '1') {
+                this.type = 0;
+            } else {
+                this.type = 1;
             }
         },
-    };
+        // 展示注册
+        showRegister() {
+            this.type = 2;
+        },
+        // 提交注册
+        handleRegister(e) {
+            e.preventDefault();
+            this.regForm.validateFields((err, values) => {
+                if (!err) {
+                    if (values.reg_password === values.reg_repassword) {
+                        console.log(values)
+                    } else {
+                        this.hasFeedback = true;
+                        this.validateStatus = 'error';
+                        this.help = '两次密码输入不一致'
+                    }
+                }
+            })
+        },
+        // 返回登陆页
+        reback() {
+            this.type = 1
+        },
+        getCaptchaImg() {
+            getCaptcha().then(res => {
+                this.captcha = res.data
+            })
+        }
+    },
+    created() {
+        this.getCaptchaImg()
+        console.log(this.$store)
+    }
+};
 </script>
 
 <style lang="stylus" scoped>
-    @import "login.styl";
+@import "login.styl";
 </style>

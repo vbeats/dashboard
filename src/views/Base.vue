@@ -9,13 +9,13 @@
                     <h1 class="text" v-show="!collapsed">哇咔咔 ~ ~</h1>
                 </div>
                 <a-menu
-                        :defaultOpenKeys="['sub1']"
-                        :defaultSelectedKeys="['index']"
-                        :inlineCollapsed="collapsed"
-                        class="slide-nav"
-                        mode="inline"
-                        theme="dark"
-                        @click="changeRoute"
+                    :defaultOpenKeys="['sub1']"
+                    :defaultSelectedKeys="['index']"
+                    :inlineCollapsed="collapsed"
+                    @click="changeRoute"
+                    class="slide-nav"
+                    mode="inline"
+                    theme="dark"
                 >
                     <a-menu-item key="index">
                         <a-icon type="pie-chart"/>
@@ -55,19 +55,19 @@
                     </a-button>
                     <!--右侧 信息-->
                     <div class="system-info">
-                        <a-dropdown placement="bottomRight">
+                        <a-dropdown placement="bottomCenter">
                             <a class="user-info">
                                 <img alt="" class="avatar" src="@/assets/img/avatar.png">
-                                <div>{{getUserInfo.username}}</div>
+                                <div>{{ getUserInfo.username }}</div>
                             </a>
                             <a-menu @click="handleSystemClick" slot="overlay">
                                 <a-menu-item key="0" style="width: 150px">
-                                    <a href="http://www.alipay.com/" target="_blank">
+                                    <a href="https://github.com/boot-vue" target="_blank">
                                         <a-icon style="margin-right: 8px" type="cloud"/>
                                         个人中心</a>
                                 </a-menu-item>
                                 <a-menu-item key="1">
-                                    <a href="http://www.taobao.com/" target="_blank">
+                                    <a href="https://boot-vue.github.io/Notes/" target="_blank">
                                         <a-icon style="margin-right: 8px" type="setting"/>
                                         个人设置</a>
                                 </a-menu-item>
@@ -88,7 +88,7 @@
                         <div class="copyright-icon">
                             <a-icon type="copyright"/>
                         </div>
-                        2019 - {{this.$moment().format('YYYY')}} &nbsp; bootvue
+                        2019 - {{ this.$moment().format('YYYY') }} &nbsp; bootvue
                     </div>
                 </a-layout-footer>
             </a-layout>
@@ -97,54 +97,57 @@
 </template>
 
 <script>
-    import {mapGetters} from 'vuex';
+import {mapGetters} from 'vuex';
 
-    export default {
-        name: "Base",
-        data() {
-            return {
-                collapsed: false,//是否收起
+export default {
+    name: "Base",
+    data() {
+        return {
+            collapsed: false,//是否收起
+        }
+    },
+    computed: {
+        ...mapGetters(['getUserInfo'])
+    },
+    methods: {
+        /*切换nav 收起  展开状态*/
+        toggleCollapsed() {
+            this.collapsed = !this.collapsed
+        },
+        /*nav触发 收起*/
+        isCollapsed(broken) {
+            this.collapsed = broken
+        },
+        /*右上角点击事件*/
+        handleSystemClick({key}) {
+            switch (key) {
+                case 'logout': //退出登录
+                    this.$store.dispatch('logout');
+                    break;
+                case '1':
+                    break;
+                default:
+                    break;
             }
         },
-        computed: {
-            ...mapGetters(['getUserInfo'])
-        },
-        methods: {
-            /*切换nav 收起  展开状态*/
-            toggleCollapsed() {
-                this.collapsed = !this.collapsed
-            },
-            /*nav触发 收起*/
-            isCollapsed(broken) {
-                this.collapsed = broken
-            },
-            /*右上角点击事件*/
-            handleSystemClick({key}) {
-                switch (key) {
-                    case 'logout': //退出登录
-                        this.$store.dispatch('logout');
-                        break;
-                    case '1':
-                        break;
-                    default:
-                        break;
-                }
-            },
-            /*路由切换*/
-            changeRoute(e) {
-                switch (e.key) {
-                    case 'index': //首页
-                        this.$router.replace({path: '/index'});
-                        break;
-                    case '2':
-                        this.$router.replace({path: '/test'});
-                        break;
-                }
+        /*路由切换*/
+        changeRoute(e) {
+            switch (e.key) {
+                case 'index': //首页
+                    this.$router.replace({path: '/index'});
+                    break;
+                case '2':
+                    this.$router.replace({path: '/test'});
+                    break;
             }
         }
+    },
+    created() {
+        this.$store.dispatch('getUserInfo')
     }
+}
 </script>
 
 <style lang="stylus" scoped>
-    @import "./base.styl";
+@import "./base.styl";
 </style>
