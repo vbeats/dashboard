@@ -193,7 +193,7 @@
             <div class="text">
                 Copyright
                 <a-icon type="copyright"/>
-                2019 - {{ this.$moment().format('YYYY') }} bootvue
+                2019 - {{ copyright }} bootvue
             </div>
         </div>
     </div>
@@ -201,6 +201,7 @@
 
 <script>
 import {getCaptcha, login} from '@/api/user'
+import moment from 'moment'
 
 export default {
     name: 'Login',
@@ -215,6 +216,7 @@ export default {
             validateStatus: '', // ‘success’, ‘warning’, ‘error’, ‘validating’
             help: '',// 提示信息
             hasFeedback: false, //是否显示校验图标
+            copyright: moment().format('YYYY')
         };
     },
     methods: {
@@ -291,7 +293,6 @@ export default {
     },
     created() {
         this.getCaptchaImg()
-        console.log(this.$store)
     }
 };
 </script>

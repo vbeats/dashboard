@@ -3,8 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from './config/axios'
-import moment from 'moment'
-import _ from 'lodash'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 
@@ -32,9 +30,6 @@ router.beforeEach((to, from, next) => {
 
 /*全局挂载*/
 Vue.prototype.$axios = axios;
-Vue.prototype.$_ = _;
-Vue.prototype.$moment = moment;
-Vue.prototype.$message = Antd.message;
 Vue.use(Antd);
 
 new Vue({

@@ -88,7 +88,7 @@
                         <div class="copyright-icon">
                             <a-icon type="copyright"/>
                         </div>
-                        2019 - {{ this.$moment().format('YYYY') }} &nbsp; bootvue
+                        2019 - {{ copyright }} &nbsp; bootvue
                     </div>
                 </a-layout-footer>
             </a-layout>
@@ -98,12 +98,14 @@
 
 <script>
 import {mapGetters} from 'vuex';
+import moment from 'moment'
 
 export default {
     name: "Base",
     data() {
         return {
             collapsed: false,//是否收起
+            copyright: moment().format('YYYY')
         }
     },
     computed: {
