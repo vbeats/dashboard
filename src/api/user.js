@@ -13,6 +13,14 @@ export function login(user) {
     return axios.post('/login', data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
 }
 
+export function loginSms(info) {
+    let data = new FormData();
+    data.set('phone', info.phone);
+    data.set('code', info.code);
+    data.set('captcha', info.captcha);
+    return axios.post('/login/sms', data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+}
+
 export function refreshToken(user) {
     return axios.get('/auth/refresh_token', {
         params: {
@@ -24,6 +32,10 @@ export function refreshToken(user) {
 
 export function logout(user) {
     return axios.post('/logout', {user_id: user.user_id})
+}
+
+export function sendSms(phone) {
+    return axios.get('/auth/sms', {params: {phone}}, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
 }
 
 export function adminList() {

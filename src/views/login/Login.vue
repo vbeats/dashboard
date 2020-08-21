@@ -70,9 +70,26 @@
                         <a-tab-pane key="2" tab="手机短信登录">
                             <a-form :form="phoneForm" @submit="handlePhoneLogin" style="margin-top: 12px">
                                 <a-form-item>
-                                    <a-input placeholder="手机号"
+                                    <a-input @change="inputPhone"
+                                             placeholder="手机号"
                                              size="large"
-                                             v-decorator="['phone',{rules: [{ required: true, message: '手机号不能为空' }]}]">
+                                             v-decorator="['phone',{rules: [
+                                                 { required: true, message: '手机号不能为空' },
+                                                 {
+                                                     validator: (rule, value, callback) => {
+                                                        const reg=/^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/
+                                                          if(!reg.test(value)){
+                                                              this.canSendSms=false
+                                                              callback('手机号不正确');
+                                                              return
+                                                          }
+                                                          this.canSendSms=true
+                                                          callback()
+
+                                                     },
+                                                     message: '手机号不正确'
+                                                 }
+                                                 ]}]">
                                         <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="phone"/>
                                     </a-input>
                                 </a-form-item>
@@ -89,7 +106,7 @@
                                         </a-col>
                                         <a-col :lg="{span:8,offset:2}" :md="{span:8,offset:2}" :sm="{span:8,offset:2}"
                                                :xl="{span:8,offset:2}" :xs="{span:8,offset:2}">
-                                            <a-button block size="large">
+                                            <a-button @click="sendSms" block size="large">
                                                 获取验证码
                                             </a-button>
                                         </a-col>
@@ -200,8 +217,9 @@
 </template>
 
 <script>
-import {getCaptcha, login} from '@/api/user'
+import {getCaptcha, login, loginSms} from '@/api/user'
 import moment from 'moment'
+import message from 'ant-design-vue/es/message'
 
 export default {
     name: 'Login',
@@ -212,6 +230,8 @@ export default {
             phoneForm: this.$form.createForm(this),
             regForm: this.$form.createForm(this),
             captcha: '',
+            phone: '',
+            canSendSms: false,
             type: 0, // 0普通登录, 1短信登录, 2注册
             validateStatus: '', // ‘success’, ‘warning’, ‘error’, ‘validating’
             help: '',// 提示信息
@@ -225,23 +245,7 @@ export default {
             e.preventDefault();
             this.form.validateFields((err, values) => {
                 if (!err) {
-                    switch (this.type) {
-                        case 0:
-                            login(values).then(res => {
-                                switch (res.code) {
-                                    case 200:
-                                        this.$store.dispatch('saveUserInfo', res.data)
-                                        break
-                                    default:
-                                        this.$message.error(res.msg)
-                                        this.getCaptchaImg()
-                                        break
-                                }
-                            })
-                            break
-                        case 1:
-                            break
-                    }
+                    login(values).then(res => this.handleLoginRes(res))
                 }
             });
         },
@@ -250,9 +254,31 @@ export default {
             e.preventDefault();
             this.phoneForm.validateFields((err, values) => {
                 if (!err) { // 正常输入
-                    console.log(values)
+                    loginSms(values).then(res => this.handleLoginRes(res))
                 }
             });
+        },
+        handleLoginRes(res) {
+            switch (res.code) {
+                case 200:
+                    this.$store.dispatch('saveUserInfo', res.data)
+                    break
+                default:
+                    this.$message.error(res.msg)
+                    this.getCaptchaImg()
+                    this.captcha = ''
+                    break
+            }
+        },
+        sendSms() {
+            if (!this.canSendSms) {
+                message.error('手机号不正确')
+                return
+            }
+            this.$store.dispatch('sendSms', this.phone)
+        },
+        inputPhone(e) {
+            this.phone = e.target.value
         },
         // 更改登录方式
         changeLoginType(key) {

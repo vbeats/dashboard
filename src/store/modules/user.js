@@ -1,7 +1,15 @@
-import {logout, refreshToken} from '@/api/user'
+import {logout, refreshToken, sendSms} from '@/api/user'
+import message from 'ant-design-vue/es/message'
 
 const state = {
-    user: {}
+    user: {
+        user_id: 0,
+        access_token: '',
+        refresh_token: '',
+        username: '',
+        authorities: '',
+        expire: 0
+    }
 };
 
 const user = {
@@ -33,6 +41,15 @@ const user = {
         localStorage.removeItem('user')
         state.user = {}
         window.location.href = '/'
+    },
+    sendSms: (state, phone) => {
+        sendSms(phone).then(res => {
+            if (res.code !== 200) {
+                message.error(res.msg)
+            } else {
+                message.success('短信已发送')
+            }
+        })
     }
 }
 

@@ -10,7 +10,7 @@
                 </div>
                 <a-menu
                     :defaultOpenKeys="['sub1']"
-                    :defaultSelectedKeys="['index']"
+                    :defaultSelectedKeys="[selectKey]"
                     :inlineCollapsed="collapsed"
                     @click="changeRoute"
                     class="slide-nav"
@@ -21,7 +21,7 @@
                         <a-icon type="pie-chart"/>
                         <span>首页</span>
                     </a-menu-item>
-                    <a-menu-item key="2">
+                    <a-menu-item key="test">
                         <a-icon type="desktop"/>
                         <span>Test页</span>
                     </a-menu-item>
@@ -105,6 +105,7 @@ export default {
     data() {
         return {
             collapsed: false,//是否收起
+            selectKey: 'index', // 选中的菜单
             copyright: moment().format('YYYY')
         }
     },
@@ -146,6 +147,7 @@ export default {
     },
     created() {
         this.$store.dispatch('getUserInfo')
+        this.selectKey = this.$route.path.substring(this.$route.path.lastIndexOf("/") + 1)
     }
 }
 </script>

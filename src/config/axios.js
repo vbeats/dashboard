@@ -19,7 +19,7 @@ const errorHandler = (error) => {
 // 请求拦截器
 axios.interceptors.request.use((config) => {
     const user = store.state.user.user
-    if (user && config.url !== '/auth/refresh_token') {
+    if (user && user.access_token !== '' && config.url !== '/auth/refresh_token') {
         if (user.expire - new Date().getTime() <= 7000) {
             // 刷新 access_token
             store.dispatch('refreshToken')
