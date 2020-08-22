@@ -12,7 +12,8 @@ const assetsCDN = {
         'vue-router': 'VueRouter',
         vuex: 'Vuex',
         axios: 'axios',
-        'ant-design-vue': 'antd'
+        'ant-design-vue': 'antd',
+        lodash: 'lodash'
     },
     css: [
         '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.css'
@@ -22,7 +23,8 @@ const assetsCDN = {
         '//cdn.jsdelivr.net/npm/vue-router@3.4.3/dist/vue-router.min.js',
         '//cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex.min.js',
         '//cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
-        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.js'
+        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.js',
+        '//cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js'
     ]
 }
 
