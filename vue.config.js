@@ -11,18 +11,20 @@ const assetsCDN = {
         vue: 'Vue',
         'vue-router': 'VueRouter',
         vuex: 'Vuex',
-        axios: 'axios'
+        axios: 'axios',
+        'ant-design-vue': 'antd'
     },
-    css: [],
+    css: [
+        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.css'
+    ],
     js: [
         '//cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
         '//cdn.jsdelivr.net/npm/vue-router@3.4.3/dist/vue-router.min.js',
         '//cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex.min.js',
-        '//cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js'
+        '//cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
+        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.js'
     ]
 }
-
-const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
     devServer: {
@@ -39,7 +41,7 @@ module.exports = {
             // Ignore all locale files of moment.js
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
         ],
-        externals: isProd ? assetsCDN.externals : {}
+        externals: assetsCDN.externals
     },
 
     chainWebpack: config => {
@@ -62,18 +64,16 @@ module.exports = {
                 name: 'assets/[name].[hash:8].[ext]'
             })
 
-        if (isProd) {
-            config.plugin('html').tap(args => {
-                args[0].cdn = assetsCDN
-                return args
-            })
-        }
+        config.plugin('html').tap(args => {
+            args[0].cdn = assetsCDN
+            return args
+        })
 
         // 拆鸡鸡
         config.optimization.splitChunks({
             chunks: 'all',
             maxInitialRequests: Infinity,
-            minSize: 1998848, //244 KB
+            minSize: 30000,  // bytes
             automaticNameDelimiter: '-',
             cacheGroups: {
                 vendor: {

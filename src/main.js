@@ -4,7 +4,6 @@ import router from './router'
 import store from './store'
 import axios from './config/axios'
 import Antd from 'ant-design-vue'
-import 'ant-design-vue/dist/antd.css'
 
 Vue.config.productionTip = false;
 
