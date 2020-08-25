@@ -2,7 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import axios from './config/axios'
+import i18n from "@/locale"
+import bootstrap from './bootstrap'
 import Antd from 'ant-design-vue'
 
 Vue.config.productionTip = false;
@@ -27,12 +28,12 @@ router.beforeEach((to, from, next) => {
     }
 });
 
-/*全局挂载*/
-Vue.prototype.$axios = axios;
 Vue.use(Antd);
 
 new Vue({
     router,
     store,
+    i18n,
+    created: bootstrap,
     render: h => h(App)
 }).$mount('#app');

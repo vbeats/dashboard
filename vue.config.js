@@ -6,14 +6,19 @@ function resolve(dir) {
 }
 
 const assetsCDN = {
-    // webpack build externals
     externals: {
         vue: 'Vue',
         'vue-router': 'VueRouter',
         vuex: 'Vuex',
         axios: 'axios',
+        'moment': 'moment',
         'ant-design-vue': 'antd',
-        lodash: 'lodash'
+        lodash: {
+            commonjs: 'lodash',
+            commonjs2: 'lodash',
+            amd: 'lodash',
+            root: '_'
+        }
     },
     css: [
         '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.css'
@@ -23,7 +28,8 @@ const assetsCDN = {
         '//cdn.jsdelivr.net/npm/vue-router@3.4.3/dist/vue-router.min.js',
         '//cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex.min.js',
         '//cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
-        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.js',
+        '//cdn.jsdelivr.net/npm/moment@2.27.0/min/moment-with-locales.min.js',
+        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd-with-locales.min.js',
         '//cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js'
     ]
 }
@@ -40,7 +46,6 @@ module.exports = {
 
     configureWebpack: {
         plugins: [
-            // Ignore all locale files of moment.js
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
         ],
         externals: assetsCDN.externals
