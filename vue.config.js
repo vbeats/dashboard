@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const CompressionPlugin = require('compression-webpack-plugin');
 
 function resolve(dir) {
     return path.join(__dirname, dir)
@@ -54,7 +55,14 @@ module.exports = {
 
     configureWebpack: {
         plugins: [
-            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+            new CompressionPlugin({
+                filename: '[path].gz[query]',
+                algorithm: 'gzip',
+                test: /\.js$|\.css$|\.html$/,
+                threshold: 10240,
+                minRatio: 0.8
+            })
         ],
         externals: isProd ? assetsCDN.externals : ''
     },
