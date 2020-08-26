@@ -5,6 +5,8 @@ function resolve(dir) {
     return path.join(__dirname, dir)
 }
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const assetsCDN = {
     externals: {
         vue: 'Vue',
@@ -34,6 +36,12 @@ const assetsCDN = {
     ]
 }
 
+const assetsDevCDN = {
+    css: [
+        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.css'
+    ]
+}
+
 module.exports = {
     devServer: {
         host: '0.0.0.0',
@@ -48,7 +56,7 @@ module.exports = {
         plugins: [
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
         ],
-        externals: assetsCDN.externals
+        externals: isProd ? assetsCDN.externals : ''
     },
 
     chainWebpack: config => {
@@ -72,7 +80,7 @@ module.exports = {
             })
 
         config.plugin('html').tap(args => {
-            args[0].cdn = assetsCDN
+            args[0].cdn = isProd ? assetsCDN : assetsDevCDN
             return args
         })
 

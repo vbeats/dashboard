@@ -1,6 +1,6 @@
 <template>
     <div class="test">
-        test....
+        {{ this.$i18n.t('test') }}
     </div>
 </template>
 

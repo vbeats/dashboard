@@ -1,4 +1,4 @@
-import axios from '../config/axios';
+import axios from '../utils/axios';
 
 // 获取图形验证码
 export function getCaptcha() {

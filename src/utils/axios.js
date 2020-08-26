@@ -1,5 +1,6 @@
 import request from 'axios';
 import store from '@/store';
+import code from '@/config/code'
 import message from 'ant-design-vue/es/message'
 
 const axios = request.create({
@@ -34,9 +35,9 @@ axios.interceptors.response.use((response) => {
     let res = {};
     try {
         switch (response.data.code) {
-            case 602:  // access_token失效
+            case code.ACCESS_TOKEN_ERROR:  // access_token失效
                 break
-            case 603:  // refresh_token失效
+            case code.REFRESH_TOKEN_ERROR:  // refresh_token失效
                 store.dispatch('reLogin')
                 break
             default:

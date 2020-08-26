@@ -2,20 +2,20 @@
     <div class="base">
         <a-layout>
             <!--侧边导航栏-->
-            <a-layout-sider :collapsed="collapsed" @breakpoint="isCollapsed" breakpoint="md"
-                            collapsedWidth="80" width="256">
+            <a-layout-sider :collapsed="collapsed" breakpoint="md" collapsedWidth="80"
+                            width="256" @breakpoint="isCollapsed">
                 <div class="logo">
                     <img alt="" src="@/assets/img/logo.svg">
-                    <h1 class="text" v-show="!collapsed">哇咔咔 ~ ~</h1>
+                    <h1 v-show="!collapsed" class="text">哇咔咔 ~ ~</h1>
                 </div>
                 <a-menu
                     :defaultOpenKeys="['sub1']"
                     :defaultSelectedKeys="[selectKey]"
                     :inlineCollapsed="collapsed"
-                    @click="changeRoute"
                     class="slide-nav"
                     mode="inline"
                     theme="dark"
+                    @click="changeRoute"
                 >
                     <a-menu-item key="index">
                         <a-icon type="pie-chart"/>
@@ -50,17 +50,17 @@
             <a-layout>
                 <!--头部-->
                 <a-layout-header class="base-header">
-                    <a-button @click="toggleCollapsed" type="primary">
+                    <a-button type="primary" @click="toggleCollapsed">
                         <a-icon :type="collapsed ? 'menu-unfold' : 'menu-fold'"/>
                     </a-button>
                     <!--右侧 信息-->
                     <div class="system-info">
-                        <a-dropdown placement="bottomCenter">
+                        <a-dropdown placement="bottomRight">
                             <a class="user-info">
                                 <img alt="" class="avatar" src="@/assets/img/avatar.png">
                                 <div>{{ getUserInfo.username }}</div>
                             </a>
-                            <a-menu @click="handleSystemClick" slot="overlay">
+                            <a-menu slot="overlay" @click="handleSystemClick">
                                 <a-menu-item key="0" style="width: 150px">
                                     <a href="https://github.com/boot-vue" target="_blank">
                                         <a-icon style="margin-right: 8px" type="cloud"/>
@@ -73,6 +73,21 @@
                                 </a-menu-item>
                                 <a-menu-divider/>
                                 <a-menu-item key="logout">退出登录</a-menu-item>
+                            </a-menu>
+                        </a-dropdown>
+
+                        <!--多语言切换-->
+                        <a-dropdown placement="bottomRight" style="margin-left: 20px">
+                            <span class="multi-lang">
+                                <a-icon :style="{fontSize:'16px'}" type="global"/>
+                            </span>
+                            <a-menu slot="overlay" @click="changeLanguage">
+                                <a-menu-item key="zh-CN">
+                                    <span>简体中文 zh-CN</span>
+                                </a-menu-item>
+                                <a-menu-item key="en-US">
+                                    <span>英文 en-US</span>
+                                </a-menu-item>
                             </a-menu>
                         </a-dropdown>
                     </div>
@@ -133,13 +148,17 @@ export default {
                     break;
             }
         },
+        /*语言切换*/
+        changeLanguage({key}) {
+            this.$store.dispatch('setLang', key)
+        },
         /*路由切换*/
         changeRoute(e) {
             switch (e.key) {
                 case 'index': //首页
                     this.$router.replace({path: '/index'});
                     break;
-                case '2':
+                case 'test':
                     this.$router.replace({path: '/test'});
                     break;
             }
