@@ -1,5 +1,5 @@
-import {logout, refreshToken, sendSms} from '@/api/user'
-import message from 'ant-design-vue/es/message'
+import {logout, refreshToken} from '@/api/user'
+import router from "@/router";
 
 const state = {
     user: {
@@ -7,48 +7,40 @@ const state = {
         access_token: '',
         refresh_token: '',
         username: '',
-        authorities: '',
-        expire: 0
+        roles: '',
+        expires: 0,
+        phone: '',
+        avatar: '',
+        time: 0  // 用户登录时间(比对token有效时间)
     }
 };
 
 const user = {
-    saveUserInfo: (state, user) => {
-        user.expire = new Date().getTime() + 7200 * 1000
-        state.user = user
-        localStorage.setItem('user', JSON.stringify(user))
-        window.location.href = '/'
+    logout: (state) => {
+        logout(state.user)
+        localStorage.removeItem('user')
+        state.user = {}
+        router.replace('/login')
     },
     getUserInfo: (state) => {
         let user = localStorage.getItem('user')
         state.user = JSON.parse(user)
     },
-    logout: (state) => {
-        logout(state.user).then(() => {
-            localStorage.removeItem('user');
-            state.user = {};
-            window.location.href = '/'
-        })
+    saveUserInfo: (state, user) => {
+        user.time = new Date().getTime()
+        user.expires = new Date().getTime() + user.expires * 1000
+        state.user = user
+        localStorage.setItem('user', JSON.stringify(user))
+        router.replace('/index')
     },
-    refreshToken: (state) => {
-        refreshToken(state.user).then(res => {
-            res.data.expire = new Date().getTime() + 7200 * 1000
+    // 刷新新的access_token
+    refreshToken: async (state) => {
+        await refreshToken(state.user).then(res => {
+            const time = state.user.time  // 原始登录时保存的time值
+            res.data.expire = new Date().getTime() + res.data.expires * 1000
             state.user = res.data
-            localStorage.setItem('user', JSON.stringify(res.data))
-        })
-    },
-    reLogin: (state) => {
-        localStorage.removeItem('user')
-        state.user = {}
-        window.location.href = '/'
-    },
-    sendSms: (state, phone) => {
-        sendSms(phone).then(res => {
-            if (res.code !== 200) {
-                message.error(res.msg)
-            } else {
-                message.success('短信已发送')
-            }
+            state.user.time = time
+            localStorage.setItem('user', JSON.stringify(state.user))
         })
     }
 }

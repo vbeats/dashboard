@@ -14,6 +14,7 @@ const assetsCDN = {
         'vue-router': 'VueRouter',
         vuex: 'Vuex',
         axios: 'axios',
+        nprogress: 'NProgress',
         'moment': 'moment',
         'ant-design-vue': 'antd',
         lodash: {
@@ -24,15 +25,16 @@ const assetsCDN = {
         }
     },
     css: [
-        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd.min.css'
+        '//cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/dist/antd.min.css'
     ],
     js: [
-        '//cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
-        '//cdn.jsdelivr.net/npm/vue-router@3.4.3/dist/vue-router.min.js',
+        '//cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js',
+        '//cdn.jsdelivr.net/npm/vue-router@3.4.9/dist/vue-router.min.js',
         '//cdn.jsdelivr.net/npm/vuex@3.5.1/dist/vuex.min.js',
-        '//cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
-        '//cdn.jsdelivr.net/npm/moment@2.27.0/min/moment-with-locales.min.js',
-        '//cdn.jsdelivr.net/npm/ant-design-vue@1.6.4/dist/antd-with-locales.min.js',
+        '//cdn.jsdelivr.net/npm/axios@0.21.0/dist/axios.min.js',
+        '//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js',
+        '//cdn.jsdelivr.net/npm/moment@2.29.1/min/moment-with-locales.min.js',
+        '//cdn.jsdelivr.net/npm/ant-design-vue@1.7.2/dist/antd-with-locales.min.js',
         '//cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js'
     ]
 }
@@ -57,7 +59,7 @@ module.exports = {
         plugins: [
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
             new CompressionPlugin({
-                filename: '[path].gz[query]',
+                filename: '[path][name].gz[query]',
                 algorithm: 'gzip',
                 test: /\.js$|\.css$|\.html$/,
                 threshold: 10240,
@@ -89,10 +91,10 @@ module.exports = {
 
         config.plugin('html').tap(args => {
             args[0].cdn = isProd ? assetsCDN : assetsDevCDN
+            args[0].title = 'dashboard'
             return args
         })
 
-        // 拆鸡鸡
         config.optimization.splitChunks({
             chunks: 'all',
             maxInitialRequests: Infinity,

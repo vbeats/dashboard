@@ -3,19 +3,20 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --mode development",
+    "serve": "vue-cli-service serve --mode dev",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "ant-design-vue": "^1.6.5",
+    "ant-design-vue": "^1.7.2",
     "axios": "^0.21.0",
-    "core-js": "^3.6.5",
+    "core-js": "^3.7.0",
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
+    "nprogress": "^0.2.0",
     "vue": "^2.6.12",
-    "vue-i18n": "^8.22.1",
-    "vue-router": "^3.4.8",
+    "vue-i18n": "^8.22.2",
+    "vue-router": "^3.4.9",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
@@ -23,12 +24,12 @@
     "@vue/cli-plugin-eslint": "^4.5.8",
     "@vue/cli-service": "^4.5.8",
     "babel-eslint": "^10.1.0",
-    "compression-webpack-plugin": "^6.0.4",
+    "compression-webpack-plugin": "^6.1.1",
     "eslint": "^7.12.1",
     "eslint-plugin-vue": "^7.1.0",
     "mockjs": "^1.1.0",
     "stylus": "^0.54.8",
-    "stylus-loader": "^4.1.1",
+    "stylus-loader": "^3.0.2",
     "vue-template-compiler": "^2.6.12"
   }
 }

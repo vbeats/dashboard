@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import {adminList} from '@/api/user'
 
 export default {
     name: "Index",
@@ -15,9 +14,7 @@ export default {
         }
     },
     mounted() {
-        adminList().then(res => {
-            this.msg = JSON.stringify(res)
-        })
+
     }
 }
 </script>

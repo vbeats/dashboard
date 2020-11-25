@@ -18,22 +18,30 @@
             <div class="content">
                 <!--登录入口-->
                 <div v-if="type!==2">
-                    <a-tabs @change="changeLoginType" class="cus-tabs" default-active-key="1" size="large">
+                    <a-tabs class="cus-tabs" default-active-key="1" size="large" @change="changeLoginType">
                         <a-tab-pane key="1" tab="账号密码登录">
                             <!--普通登录-->
-                            <a-form :form="form" @submit="handleLogin" style="margin-top: 12px">
+                            <a-form :form="form" style="margin-top: 12px" @submit="handleLogin">
+                                <a-form-item v-show="showTenant">
+                                    <a-input v-decorator="['tenant_code',
+                                    {rules: [{ required: true, message: '租户编号不能为空' }],initialValue:tenantCode}]"
+                                             placeholder="租户编号"
+                                             size="large" @change="inputTenantCode">
+                                        <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="user"/>
+                                    </a-input>
+                                </a-form-item>
                                 <a-form-item>
-                                    <a-input placeholder="用户名"
-                                             size="large"
-                                             v-decorator="['username',{rules: [{ required: true, message: '用户名不能为空' }]}]">
+                                    <a-input v-decorator="['username',{rules: [{ required: true, message: '用户名不能为空' }]}]"
+                                             placeholder="用户名"
+                                             size="large">
                                         <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="user"/>
                                     </a-input>
                                 </a-form-item>
                                 <a-form-item style="margin-top: 12px">
-                                    <a-input placeholder="密码"
+                                    <a-input v-decorator="['password',{rules: [{ required: true, message: '密码不能为空' }]}]"
+                                             placeholder="密码"
                                              size="large"
-                                             type="password"
-                                             v-decorator="['password',{rules: [{ required: true, message: '密码不能为空' }]}]">
+                                             type="password">
                                         <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="lock"/>
                                     </a-input>
                                 </a-form-item>
@@ -42,9 +50,9 @@
                                     <a-row>
                                         <a-col :lg="{span:14}" :md="{span:14}" :sm="{span:14}" :xl="{span:14}"
                                                :xs="{span:14}">
-                                            <a-input placeholder="验证码"
-                                                     size="large"
-                                                     v-decorator="['captcha',{rules: [{ required: true, message: '验证码不能为空' }]}]">
+                                            <a-input v-decorator="['code',{rules: [{ required: true, message: '验证码不能为空' }]}]"
+                                                     placeholder="验证码"
+                                                     size="large">
                                                 <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="picture"/>
                                             </a-input>
                                         </a-col>
@@ -52,8 +60,8 @@
                                                :xl="{span:8,offset:2}" :xs="{span:8,offset:2}">
                                             <img
                                                 :src="captcha"
-                                                @click="getCaptchaImg"
-                                                alt="" style="width: 100%">
+                                                alt=""
+                                                style="width: 100%" @click="getCaptchaImg">
                                         </a-col>
                                     </a-row>
                                 </a-form-item>
@@ -68,12 +76,16 @@
                         </a-tab-pane>
 
                         <a-tab-pane key="2" tab="手机短信登录">
-                            <a-form :form="phoneForm" @submit="handlePhoneLogin" style="margin-top: 12px">
+                            <a-form :form="phoneForm" style="margin-top: 12px" @submit="handlePhoneLogin">
+                                <a-form-item v-show="showTenant">
+                                    <a-input v-decorator="['tenant_code',{rules: [{ required: true, message: '租户编号不能为空' }],initialValue:tenantCode}]"
+                                             placeholder="租户编号"
+                                             size="large" @change="inputTenantCode">
+                                        <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="user"/>
+                                    </a-input>
+                                </a-form-item>
                                 <a-form-item>
-                                    <a-input @change="inputPhone"
-                                             placeholder="手机号"
-                                             size="large"
-                                             v-decorator="['phone',{rules: [
+                                    <a-input v-decorator="['phone',{rules: [
                                                  { required: true, message: '手机号不能为空' },
                                                  {
                                                      validator: (rule, value, callback) => {
@@ -89,7 +101,10 @@
                                                      },
                                                      message: '手机号不正确'
                                                  }
-                                                 ]}]">
+                                                 ]}]"
+                                             placeholder="手机号"
+                                             size="large"
+                                             @change="inputPhone">
                                         <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="phone"/>
                                     </a-input>
                                 </a-form-item>
@@ -97,38 +112,18 @@
                                     <a-row>
                                         <a-col :lg="{span:14}" :md="{span:14}" :sm="{span:14}" :xl="{span:14}"
                                                :xs="{span:14}">
-                                            <a-input placeholder="验证码"
+                                            <a-input v-decorator="['code',{rules: [{ required: true, message: '验证码不能为空' }]}]"
+                                                     placeholder="验证码"
                                                      size="large"
-                                                     type="text"
-                                                     v-decorator="['code',{rules: [{ required: true, message: '验证码不能为空' }]}]">
+                                                     type="text">
                                                 <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="mail"/>
                                             </a-input>
                                         </a-col>
                                         <a-col :lg="{span:8,offset:2}" :md="{span:8,offset:2}" :sm="{span:8,offset:2}"
                                                :xl="{span:8,offset:2}" :xs="{span:8,offset:2}">
-                                            <a-button @click="sendSms" block size="large">
-                                                获取验证码
+                                            <a-button block size="large" :disabled="!canSendSms" @click="sendSms">
+                                                {{ smsText }}
                                             </a-button>
-                                        </a-col>
-                                    </a-row>
-                                </a-form-item>
-
-                                <a-form-item style="margin-top: 12px">
-                                    <a-row>
-                                        <a-col :lg="{span:14}" :md="{span:14}" :sm="{span:14}" :xl="{span:14}"
-                                               :xs="{span:14}">
-                                            <a-input placeholder="验证码"
-                                                     size="large"
-                                                     v-decorator="['captcha',{rules: [{ required: true, message: '验证码不能为空' }]}]">
-                                                <a-icon slot="prefix" style="color:rgba(0,0,0,.25)" type="picture"/>
-                                            </a-input>
-                                        </a-col>
-                                        <a-col :lg="{span:8,offset:2}" :md="{span:8,offset:2}" :sm="{span:8,offset:2}"
-                                               :xl="{span:8,offset:2}" :xs="{span:8,offset:2}">
-                                            <img
-                                                :src="captcha"
-                                                @click="getCaptchaImg"
-                                                alt="" style="width: 100%">
                                         </a-col>
                                     </a-row>
                                 </a-form-item>
@@ -146,19 +141,19 @@
                 <!--注册入口-->
                 <div v-if="type===2">
                     <div class="reg-text">用户注册</div>
-                    <a-form :form="regForm" @submit="handleRegister" style="margin-top: 20px">
+                    <a-form :form="regForm" style="margin-top: 20px" @submit="handleRegister">
                         <a-form-item>
-                            <a-input placeholder="用户名"
-                                     size="large"
-                                     v-decorator="['reg_username',{rules: [{ required: true, message: '用户名不能为空' }]}]">
+                            <a-input v-decorator="['reg_username',{rules: [{ required: true, message: '用户名不能为空' }]}]"
+                                     placeholder="用户名"
+                                     size="large">
                                 <a-icon slot="suffix" style="color:rgba(0,0,0,.25)" type="user"/>
                             </a-input>
                         </a-form-item>
                         <a-form-item style="margin-top: 12px">
-                            <a-input placeholder="密码, 至少6位, 区分大小写"
+                            <a-input v-decorator="['reg_password',{rules: [{ required: true, message: '密码不能为空' }]}]"
+                                     placeholder="密码, 至少6位, 区分大小写"
                                      size="large"
-                                     type="password"
-                                     v-decorator="['reg_password',{rules: [{ required: true, message: '密码不能为空' }]}]">
+                                     type="password">
                                 <a-icon slot="suffix" style="color:rgba(0,0,0,.25)" type="lock"/>
                             </a-input>
                         </a-form-item>
@@ -167,12 +162,12 @@
                                      :validateStatus="validateStatus"
                                      style="margin-top: 12px"
                         >
-                            <a-input placeholder="确认密码"
+                            <a-input v-decorator="['reg_repassword',{rules: [{ required: true, message: '密码不能为空' }]}]"
+                                     placeholder="确认密码"
                                      size="large"
-                                     type="password"
-                                     v-decorator="['reg_repassword',{rules: [{ required: true, message: '密码不能为空' }]}]">
+                                     type="password">
                                 >
-                                <a-icon slot="suffix" style="color:rgba(0,0,0,.25)" type="lock" v-if="!hasFeedback"/>
+                                <a-icon v-if="!hasFeedback" slot="suffix" style="color:rgba(0,0,0,.25)" type="lock"/>
                             </a-input>
                         </a-form-item>
 
@@ -185,18 +180,18 @@
                                     </a-button>
                                 </a-form-item>
                             </div>
-                            <div @click="reback" class="reback-text">
+                            <div class="reback-text" @click="reback">
                                 使用已有账户登录
                             </div>
                         </div>
                     </a-form>
                 </div>
-                <div class="other" v-if="type!==2">
+                <div v-if="type!==2" class="other">
                     <div class="social">
                         <div class="text">其它登陆方式</div>
                         <!--社交登录 图标-->
                     </div>
-                    <div @click="showRegister" class="register">
+                    <div class="register" @click="showRegister">
                         注册账户
                     </div>
                 </div>
@@ -210,14 +205,14 @@
             <div class="text">
                 Copyright
                 <a-icon type="copyright"/>
-                2019 - {{ copyright }} bootvue
+                2019 - {{ copyright }} bootvue@gamil.com
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import {getCaptcha, login, loginSms} from '@/api/user'
+import {getCaptcha, login, loginSms, sendSms} from '@/api/user'
 import moment from 'moment'
 import message from 'ant-design-vue/es/message'
 
@@ -229,13 +224,17 @@ export default {
             form: this.$form.createForm(this),
             phoneForm: this.$form.createForm(this),
             regForm: this.$form.createForm(this),
-            captcha: '',
+            tenantCode: '000000', // 租户编号
+            captcha: '',  // 验证码base64
+            key: '', // 验证码key
             phone: '',
             canSendSms: false,
-            type: 0, // 0普通登录, 1短信登录, 2注册
+            smsText: '获取验证码',
+            type: 0, // 0普通登录, 1短信登录
             validateStatus: '', // ‘success’, ‘warning’, ‘error’, ‘validating’
             help: '',// 提示信息
             hasFeedback: false, //是否显示校验图标
+            showTenant: process.env.VUE_APP_TENANT === 'show', // 是否显示租户编号
             copyright: moment().format('YYYY')
         };
     },
@@ -244,8 +243,9 @@ export default {
         handleLogin(e) {
             e.preventDefault();
             this.form.validateFields((err, values) => {
-                if (!err) {
-                    login(values).then(res => this.handleLoginRes(res))
+                if (!err && this.key !== '') {
+                    values.key = this.key
+                    login(values).then(res => this.handleLoginRes(res));
                 }
             });
         },
@@ -254,6 +254,7 @@ export default {
             e.preventDefault();
             this.phoneForm.validateFields((err, values) => {
                 if (!err) { // 正常输入
+                    values.key = this.key;
                     loginSms(values).then(res => this.handleLoginRes(res))
                 }
             });
@@ -265,8 +266,6 @@ export default {
                     break
                 default:
                     this.$message.error(res.msg)
-                    this.getCaptchaImg()
-                    this.captcha = ''
                     break
             }
         },
@@ -275,7 +274,25 @@ export default {
                 message.error('手机号不正确')
                 return
             }
-            this.$store.dispatch('sendSms', this.phone)
+            sendSms(this.phone).then(res => {
+                if (res.code !== 200) {
+                    message.error(res.msg)
+                } else {
+                    message.success('短信已发送')
+                    this.canSendSms = false;
+                    let i = 60;
+                    setTimeout(this.handleSmsText(i), 1000)
+                }
+            })
+        },
+        handleSmsText(i) {
+            if (i <= 0) {
+                this.canSendSms = true
+                this.smsText = '获取验证码'
+                return
+            }
+            this.smsText = --i + 's'
+            setTimeout(this.handleSmsText(i), 1000)
         },
         inputPhone(e) {
             this.phone = e.target.value
@@ -307,13 +324,19 @@ export default {
                 }
             })
         },
+        inputTenantCode(e) {
+            this.tenantCode = e.target.value
+        },
         // 返回登陆页
         reback() {
+            this.form.resetFields();
+            this.phoneForm.resetFields();
             this.type = 1
         },
         getCaptchaImg() {
             getCaptcha().then(res => {
-                this.captcha = res.data
+                this.captcha = res.data.image
+                this.key = res.data.key
             })
         }
     },

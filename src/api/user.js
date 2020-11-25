@@ -2,42 +2,48 @@ import axios from '../utils/axios';
 
 // 获取图形验证码
 export function getCaptcha() {
-    return axios.get('/auth/captcha')
+    return axios.get('/auth/oauth/captcha?appid=' + process.env.VUE_APP_APPID + "&secret=" + process.env.VUE_APP_SECRET)
 }
 
 export function login(user) {
-    let data = new FormData();
-    data.set('username', user.username);
-    data.set('password', user.password);
-    data.set('captcha', user.captcha);
-    return axios.post('/login', data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+    const data = {
+        'tenant_code': user.tenant_code,
+        'username': user.username,
+        'password': user.password,
+        'key': user.key,
+        'code': user.code,
+        'type': 0
+    }
+    return axios.post('/auth/oauth/token?appid=' + process.env.VUE_APP_APPID + "&secret=" + process.env.VUE_APP_SECRET, data)
 }
 
-export function loginSms(info) {
-    let data = new FormData();
-    data.set('phone', info.phone);
-    data.set('code', info.code);
-    data.set('captcha', info.captcha);
-    return axios.post('/login/sms', data, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-}
-
-export function refreshToken(user) {
-    return axios.get('/auth/refresh_token', {
-        params: {
-            user_id: user.user_id,
-            refresh_token: user.refresh_token
-        }
-    }, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+export function loginSms(user) {
+    const data = {
+        'tenant_code': user.tenant_code,
+        'phone': user.phone,
+        'code': user.code,
+        'type': 1
+    }
+    return axios.post('/auth/oauth/token?appid=' + process.env.VUE_APP_APPID + "&secret=" + process.env.VUE_APP_SECRET, data)
 }
 
 export function logout(user) {
-    return axios.post('/logout', {user_id: user.user_id})
+    console.log("退出登录", user.username)
+}
+
+export function refreshToken(user) {
+    const data = {
+        'tenant_code': user.tenant_code,
+        'refresh_token': user.refresh_token,
+        'type': 2
+    }
+    return axios.post('/auth/oauth/token?appid=' + process.env.VUE_APP_APPID + "&secret=" + process.env.VUE_APP_SECRET, data)
 }
 
 export function sendSms(phone) {
-    return axios.get('/auth/sms', {params: {phone}}, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+    const data = {
+        phone
+    }
+    return axios.post('/auth/oauth/sms?appid=' + process.env.VUE_APP_APPID + "&secret=" + process.env.VUE_APP_SECRET, data)
 }
 
-export function adminList() {
-    return axios.get('/admin/list')
-}

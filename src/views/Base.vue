@@ -103,7 +103,7 @@
                         <div class="copyright-icon">
                             <a-icon type="copyright"/>
                         </div>
-                        2019 - {{ copyright }} &nbsp; bootvue
+                        2019 - {{ copyright }} &nbsp; bootvue@gmail.com
                     </div>
                 </a-layout-footer>
             </a-layout>
@@ -162,11 +162,19 @@ export default {
                     this.$router.replace({path: '/test'});
                     break;
             }
-        }
+        },
+        checkToken() {
+            const user = this.$store.state.user.user;
+            if (user.expires - new Date().getTime() < 200 * 1000) { // 过期时间不足200秒了
+                this.$store.dispatch('refreshToken')
+            }
+            setTimeout(this.checkToken, 300000) // 5分钟一次
+        },
     },
     created() {
         this.$store.dispatch('getUserInfo')
         this.selectKey = this.$route.path.substring(this.$route.path.lastIndexOf("/") + 1)
+        this.checkToken()
     }
 }
 </script>
