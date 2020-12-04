@@ -1,6 +1,6 @@
 import request from 'axios';
 import store from '@/store';
-import message from 'ant-design-vue/es/message'
+import {message} from "ant-design-vue";
 
 const axios = request.create({
     baseURL: process.env.VUE_APP_API,
