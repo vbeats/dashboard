@@ -12,7 +12,8 @@ const axios = request.create({
 
 // 异常处理
 const errorHandler = (error) => {
-    message.error('网络异常~')
+    // error.response.data
+    message.error(error.toString(), 10)
     return Promise.reject(error)
 }
 
@@ -33,7 +34,7 @@ axios.interceptors.response.use((response) => {
                 store.dispatch('logout')
                 break
             default:
-                res = response.data
+                res = data
         }
     } catch (e) {
         res = response;
